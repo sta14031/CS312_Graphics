@@ -61,7 +61,12 @@ void processUserInputs(bool & running)
 void DrawPoint(Buffer2D<PIXEL> & target, Vertex* v, Attributes* attrs, Attributes * const uniforms, FragmentShader* const frag)
 {
         // Set our pixel according to the attribute value!
-        target[(int)v[0].y][(int)v[0].x] = attrs[0].color;
+
+        PIXEL color = attrs->color;
+        //int avg = ( ((color >> 16) & 0xFF) + ((color >> 8) & 0xFF) + (color & 0xFF) ) / 3;
+
+        
+        target[(int)v[0].y][(int)v[0].x] = 0xFF00FF00 & color;
 }
 
 /****************************************
@@ -175,6 +180,9 @@ int main()
     GPU_OUTPUT = SDL_CreateTextureFromSurface(REN, FRAME_BUF);
     BufferImage frame(FRAME_BUF);
 
+    BufferImage image("image.bmp");
+    FragmentShader greenShader(GreenFragShader);
+
     // Draw loop 
     bool running = true;
     while(running) 
@@ -185,7 +193,15 @@ int main()
         // Refresh Screen
         clearScreen(frame);
 
-        TestDrawPixel(frame);
+        // Test shader
+        for (int x = 0; x < 256; x++) {
+            for (int y = 0; y < 256; y++) {
+                Vertex v = {x, y, 1, 1};
+                Attributes a;
+                a.color = image[x][y];
+                DrawPrimitive(POINT, frame, &v, &a, NULL, &greenShader, NULL, NULL);
+            }
+        }
 
         // Push to the GPU
         SendFrame(GPU_OUTPUT, REN, FRAME_BUF);

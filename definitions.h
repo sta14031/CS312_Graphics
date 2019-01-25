@@ -242,6 +242,15 @@ void DefaultFragShader(PIXEL & fragment, const Attributes & vertAttr, const Attr
     fragment = 0xffff0000;
 }
 
+// For the team activity
+void GreenFragShader(PIXEL & fragment, const Attributes & vertAttr, const Attributes & uniforms)
+{
+    PIXEL color = vertAttr.color;
+    int avg = ( ((color >> 16) & 0xFF) + ((color >> 8) & 0xFF) + (color & 0xFF) ) / 3;
+    fragment = 0xFF000000 | (avg << 8);
+
+}
+
 /*******************************************************
  * FRAGMENT_SHADER
  * Encapsulates a programmer-specified callback

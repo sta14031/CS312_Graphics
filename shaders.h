@@ -58,4 +58,9 @@ void MVPVertexShader(Vertex & vertOut, Attributes & attrOut, const Vertex & vert
     attrOut = vertAttr;
 }
 
+void OrthVertexShader(Vertex & vertOut, Attributes & attrOut, const Vertex & vertIn, const Attributes & vertAttr, const Attributes & uniforms) {
+    vertOut = *(Matrix*)uniforms[0].ptr * vertIn;
+    attrOut = vertAttr;
+}
+
 #endif

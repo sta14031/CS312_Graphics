@@ -124,9 +124,58 @@ void CADView(Buffer2D<PIXEL> & target)
         static Buffer2D<PIXEL> botLeft(halfWid, halfHgt);
         static Buffer2D<PIXEL> botRight(halfWid, halfHgt);
 
+        topLeft.zeroOut();
+        topRight.zeroOut();
+        botLeft.zeroOut();
+        botRight.zeroOut();
 
-        // Your code goes here 
-        // Feel free to copy from other test functions to get started!
+         /**************************************************
+        * 1. Interpolated color triangle
+        *************************************************/
+        Vertex colorTriangle[3];
+        Attributes colorAttributes[3];
+        colorTriangle[0] = { 10, 20, 50, 1};
+        colorTriangle[1] = { 50, 10, 50, 1};
+        colorTriangle[2] = { 50, 50, 50, 1};
+
+        PIXEL colors[3] = {0xffff0000, 0xff00ff00, 0xff0000ff};
+        colorAttributes[0].insertDbl(1.0); // r
+        colorAttributes[0].insertDbl(0.0); // g
+        colorAttributes[0].insertDbl(0.0); // b
+        colorAttributes[1].insertDbl(0.0); // r
+        colorAttributes[1].insertDbl(1.0); // g
+        colorAttributes[1].insertDbl(0.0); // b
+        colorAttributes[2].insertDbl(0.0); // r
+        colorAttributes[2].insertDbl(0.0); // g
+        colorAttributes[2].insertDbl(1.0); // b
+
+        FragmentShader myColorFragShader;
+        myColorFragShader.FragShader = &ColorFragShader;
+
+        Attributes colorUniforms;
+        
+        VertexShader myColorVertexShader;
+        myColorVertexShader.VertShader = &MVPVertexShader;
+
+        /******************************************************************
+		 * TRANSLATE (move +100 in the X direction, +50 in the Y direction)
+         *****************************************************************/
+
+        Matrix model = translateMatrix(0, 0, 0);
+        Matrix view  = viewTransform(myCam.x, myCam.y, myCam.z,
+                                     myCam.yaw, myCam.pitch, myCam.roll);
+        Matrix proj  = perspectiveTransform(60.0, 1.0, 1, 200); // FOV, Aspect ratio, Near, Far
+
+        colorUniforms.insertPtr(&model);
+        colorUniforms.insertPtr(&model);
+        colorUniforms.insertPtr(&view);
+        colorUniforms.insertPtr(&proj);
+
+	DrawPrimitive(TRIANGLE, topRight, colorTriangle, colorAttributes, &colorUniforms, &myColorFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, topLeft, colorTriangle, colorAttributes, &colorUniforms, &myColorFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, botRight, colorTriangle, colorAttributes, &colorUniforms, &myColorFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, botLeft, colorTriangle, colorAttributes, &colorUniforms, &myColorFragShader, &myColorVertexShader);
+
 
 
         // Blit four panels to target

@@ -702,7 +702,7 @@ int main()
         // Refresh Screen
         clearScreen(frame);
 
-        TestPipeline(frame);
+        CADView(frame);
 
         // Push to the GPU
         SendFrame(GPU_OUTPUT, REN, FRAME_BUF);

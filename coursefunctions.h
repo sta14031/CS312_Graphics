@@ -219,7 +219,11 @@ void CADView(Buffer2D<PIXEL> & target)
         Matrix model = translateMatrix(0, 0, 0);
         Matrix view  = viewTransform(myCam.x, myCam.y, myCam.z,
                                      myCam.yaw, myCam.pitch, myCam.roll);
+        Matrix frontView = viewTransform(orthCam.x, orthCam.y, orthCam.z, 
+                                             orthCam.yaw, orthCam.pitch, orthCam.roll);
         Matrix proj  = perspectiveTransform(60.0, 1.0, 1, 200); // FOV, Aspect ratio, Near, Far
+        Matrix identity;
+        Matrix orth = orthTransform(30.0, -30.0, 30.0, -30.0, 1000.0, -100.0);
 
         colorUniforms.insertPtr(&model);
         colorUniforms.insertPtr(&view);
@@ -238,9 +242,18 @@ void CADView(Buffer2D<PIXEL> & target)
         DrawPrimitive(TRIANGLE, topRight, verticesTopA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
         DrawPrimitive(TRIANGLE, topRight, verticesTopB, imageAttributesB, &colorUniforms, &myImageFragShader, &myColorVertexShader);
 
-        /*DrawPrimitive(TRIANGLE, topLeft, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
+        Attributes orthUniforms;
+        orthUniforms.insertPtr(&frontImage);
+
+        orthUniforms.insertPtr(&model);
+        orthUniforms.insertPtr(&view);
+        orthUniforms.insertPtr(&orth);
+
+        DrawPrimitive(TRIANGLE, topLeft, verticesFrontA, imageAttributesA, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, topLeft, verticesFrontB, imageAttributesB, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+
         
-        DrawPrimitive(TRIANGLE, botRight, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
+        /*DrawPrimitive(TRIANGLE, botRight, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
         
         DrawPrimitive(TRIANGLE, botLeft, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);*/
 

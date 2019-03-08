@@ -70,6 +70,7 @@ struct camControls {
 };
 
 camControls myCam;
+camControls orthCam;
 
 /******************************************************
  * BUFFER_2D:

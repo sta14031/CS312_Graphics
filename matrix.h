@@ -165,4 +165,20 @@ Matrix perspectiveTransform(const double& fovYDegrees, const double& aspectRatio
     return matrix;
 }
 
+Matrix orthTransform(const double& right, const double& left,
+                     const double& top, const double& bottom,
+                     const double& far, const double& near)
+{
+    Matrix matrix;
+
+    matrix[0]  = 2.0 / (right - left);
+    matrix[3]  = (right + left) / (left - right);
+    matrix[5]  = 2.0 / (top - bottom);
+    matrix[7]  = (top + bottom) / (bottom - top);
+    matrix[10] = 2.0 / (near - far);
+    matrix[11] = (far + near) / (near - far);
+
+    return matrix;
+}
+
 #endif // MATRIX_H

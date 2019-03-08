@@ -129,30 +129,85 @@ void CADView(Buffer2D<PIXEL> & target)
         botLeft.zeroOut();
         botRight.zeroOut();
 
-         /**************************************************
-        * 1. Interpolated color triangle
-        *************************************************/
-        Vertex colorTriangle[3];
-        Attributes colorAttributes[3];
-        colorTriangle[0] = { 10, 20, 50, 1};
-        colorTriangle[1] = { 50, 10, 50, 1};
-        colorTriangle[2] = { 50, 50, 50, 1};
+        /**************************************************
+        * Cube
+        **************************************************/
+        Vertex cube[] = { {-20,-20, 50, 1},
+                          {20, -20, 50, 1},
+                          {20, 20, 50, 1},
+                          {-20,20, 50, 1},
+                          {-20, -20, 90, 1},
+                          {-20, 20, 90, 1},
+                          {20, 20, 90, 1}};
 
-        PIXEL colors[3] = {0xffff0000, 0xff00ff00, 0xff0000ff};
-        colorAttributes[0].insertDbl(1.0); // r
-        colorAttributes[0].insertDbl(0.0); // g
-        colorAttributes[0].insertDbl(0.0); // b
-        colorAttributes[1].insertDbl(0.0); // r
-        colorAttributes[1].insertDbl(1.0); // g
-        colorAttributes[1].insertDbl(0.0); // b
-        colorAttributes[2].insertDbl(0.0); // r
-        colorAttributes[2].insertDbl(0.0); // g
-        colorAttributes[2].insertDbl(1.0); // b
 
-        FragmentShader myColorFragShader;
-        myColorFragShader.FragShader = &ColorFragShader;
+        /**************************************************
+        * 1. Front quad
+        **************************************************/
+        Vertex verticesFrontA[3];
+        verticesFrontA[0] = cube[0];
+        verticesFrontA[1] = cube[1];
+        verticesFrontA[2] = cube[2];
+
+        Vertex verticesFrontB[3];        
+        verticesFrontB[0] = cube[2];
+        verticesFrontB[1] = cube[3];
+        verticesFrontB[2] = cube[0];
+
+        /**************************************************
+        * 2. Side quad
+        **************************************************/
+        Vertex verticesSideA[3];
+        verticesSideA[0] = cube[4];
+        verticesSideA[1] = cube[0];
+        verticesSideA[2] = cube[3];
+
+        Vertex verticesSideB[3];       
+        verticesSideB[0] = cube[3];
+        verticesSideB[1] = cube[5];
+        verticesSideB[2] = cube[4];
+
+        /**************************************************
+        * 2. Top quad
+        **************************************************/
+        Vertex verticesTopA[3];
+        verticesTopA[0] = cube[3];
+        verticesTopA[1] = cube[2];
+        verticesTopA[2] = cube[6];
+
+        Vertex verticesTopB[3];       
+        verticesTopB[0] = cube[6];
+        verticesTopB[1] = cube[5];
+        verticesTopB[2] = cube[3];
+
+        double coordinates[4][2] = { {0,0}, {1,0}, {1,1}, {0,1} };
+
+        Attributes imageAttributesA[3];
+        Attributes imageAttributesB[3];
+        // Your texture coordinate code goes here for 'imageAttributesA, imageAttributesB'
+        imageAttributesA[0].insertDbl(coordinates[0][0]);
+        imageAttributesA[0].insertDbl(coordinates[0][1]);
+        imageAttributesA[1].insertDbl(coordinates[1][0]);
+        imageAttributesA[1].insertDbl(coordinates[1][1]);
+        imageAttributesA[2].insertDbl(coordinates[2][0]);
+        imageAttributesA[2].insertDbl(coordinates[2][1]);
+
+        imageAttributesB[0].insertDbl(coordinates[2][0]);
+        imageAttributesB[0].insertDbl(coordinates[2][1]);
+        imageAttributesB[1].insertDbl(coordinates[3][0]);
+        imageAttributesB[1].insertDbl(coordinates[3][1]);
+        imageAttributesB[2].insertDbl(coordinates[0][0]);
+        imageAttributesB[2].insertDbl(coordinates[0][1]);
+
+        BufferImage frontImage("front.bmp");
+        BufferImage sideImage("side.bmp");
+        BufferImage topImage("top.bmp");
 
         Attributes colorUniforms;
+        colorUniforms.insertPtr(&frontImage);
+
+        FragmentShader myImageFragShader;
+        myImageFragShader.FragShader = &ImageFragShader;
         
         VertexShader myColorVertexShader;
         myColorVertexShader.VertShader = &MVPVertexShader;
@@ -167,14 +222,27 @@ void CADView(Buffer2D<PIXEL> & target)
         Matrix proj  = perspectiveTransform(60.0, 1.0, 1, 200); // FOV, Aspect ratio, Near, Far
 
         colorUniforms.insertPtr(&model);
-        colorUniforms.insertPtr(&model);
         colorUniforms.insertPtr(&view);
         colorUniforms.insertPtr(&proj);
 
-	DrawPrimitive(TRIANGLE, topRight, colorTriangle, colorAttributes, &colorUniforms, &myColorFragShader, &myColorVertexShader);
-        DrawPrimitive(TRIANGLE, topLeft, colorTriangle, colorAttributes, &colorUniforms, &myColorFragShader, &myColorVertexShader);
-        DrawPrimitive(TRIANGLE, botRight, colorTriangle, colorAttributes, &colorUniforms, &myColorFragShader, &myColorVertexShader);
-        DrawPrimitive(TRIANGLE, botLeft, colorTriangle, colorAttributes, &colorUniforms, &myColorFragShader, &myColorVertexShader);
+	DrawPrimitive(TRIANGLE, topRight, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, topRight, verticesFrontB, imageAttributesB, &colorUniforms, &myImageFragShader, &myColorVertexShader);
+
+        colorUniforms[0].ptr = &sideImage;
+
+        DrawPrimitive(TRIANGLE, topRight, verticesSideA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, topRight, verticesSideB, imageAttributesB, &colorUniforms, &myImageFragShader, &myColorVertexShader);
+
+        colorUniforms[0].ptr = &topImage;
+
+        DrawPrimitive(TRIANGLE, topRight, verticesTopA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, topRight, verticesTopB, imageAttributesB, &colorUniforms, &myImageFragShader, &myColorVertexShader);
+
+        /*DrawPrimitive(TRIANGLE, topLeft, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
+        
+        DrawPrimitive(TRIANGLE, botRight, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
+        
+        DrawPrimitive(TRIANGLE, botLeft, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);*/
 
 
 

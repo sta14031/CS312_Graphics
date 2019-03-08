@@ -102,6 +102,14 @@ void processUserInputs(bool & running)
             myCam.x += (cos((myCam.yaw / 180.0) * M_PI)) * 0.5;
             myCam.z += (sin((myCam.yaw / 180.0) * M_PI)) * 0.5;
         }
+        if(e.key.keysym.sym == 'r' && e.type == SDL_KEYDOWN)
+        {
+            myCam.y += 0.5;
+        }
+        if(e.key.keysym.sym == 'f' && e.type == SDL_KEYDOWN)
+        {
+            myCam.y -= 0.5;
+        }
     }
 }
 

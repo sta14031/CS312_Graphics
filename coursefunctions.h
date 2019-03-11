@@ -168,7 +168,7 @@ void CADView(Buffer2D<PIXEL> & target)
         verticesSideB[2] = cube[4];
 
         /**************************************************
-        * 2. Top quad
+        * 3. Top quad
         **************************************************/
         Vertex verticesTopA[3];
         verticesTopA[0] = cube[3];
@@ -213,14 +213,19 @@ void CADView(Buffer2D<PIXEL> & target)
         myColorVertexShader.VertShader = &MVPVertexShader;
 
         /******************************************************************
-		 * TRANSLATE (move +100 in the X direction, +50 in the Y direction)
+	 * Do the transformations needed to display correctly
          *****************************************************************/
-
         Matrix model = translateMatrix(0, 0, 0);
         Matrix view  = viewTransform(myCam.x, myCam.y, myCam.z,
                                      myCam.yaw, myCam.pitch, myCam.roll);
+
         Matrix frontView = viewTransform(orthCam.x, orthCam.y, orthCam.z, 
                                              orthCam.yaw, orthCam.pitch, orthCam.roll);
+        Matrix sideView = viewTransform(orthCam.x - 70, orthCam.y, orthCam.z + 70,
+                                             orthCam.yaw - 90.0, orthCam.pitch, orthCam.roll);
+        Matrix topView = viewTransform(orthCam.x, orthCam.y + 70, orthCam.z + 70,
+                                             orthCam.yaw, orthCam.pitch - 90.0, orthCam.roll);
+
         Matrix proj  = perspectiveTransform(60.0, 1.0, 1, 200); // FOV, Aspect ratio, Near, Far
         Matrix identity;
         Matrix orth = orthTransform(30.0, -30.0, 30.0, -30.0, 1000.0, -100.0);
@@ -229,6 +234,9 @@ void CADView(Buffer2D<PIXEL> & target)
         colorUniforms.insertPtr(&view);
         colorUniforms.insertPtr(&proj);
 
+        /******************************************************************
+	 * 1. Perspective correct view
+         *****************************************************************/
 	DrawPrimitive(TRIANGLE, topRight, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
         DrawPrimitive(TRIANGLE, topRight, verticesFrontB, imageAttributesB, &colorUniforms, &myImageFragShader, &myColorVertexShader);
 
@@ -246,18 +254,63 @@ void CADView(Buffer2D<PIXEL> & target)
         orthUniforms.insertPtr(&frontImage);
 
         orthUniforms.insertPtr(&model);
-        orthUniforms.insertPtr(&view);
+        orthUniforms.insertPtr(&frontView);
         orthUniforms.insertPtr(&orth);
+
+        /******************************************************************
+	 * 2. Top left (from FRONT)
+         *****************************************************************/
 
         DrawPrimitive(TRIANGLE, topLeft, verticesFrontA, imageAttributesA, &orthUniforms, &myImageFragShader, &myColorVertexShader);
         DrawPrimitive(TRIANGLE, topLeft, verticesFrontB, imageAttributesB, &orthUniforms, &myImageFragShader, &myColorVertexShader);
 
-        
-        /*DrawPrimitive(TRIANGLE, botRight, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);
-        
-        DrawPrimitive(TRIANGLE, botLeft, verticesFrontA, imageAttributesA, &colorUniforms, &myImageFragShader, &myColorVertexShader);*/
+        orthUniforms[0].ptr = &sideImage;
 
+        DrawPrimitive(TRIANGLE, topLeft, verticesSideA, imageAttributesA, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, topLeft, verticesSideB, imageAttributesB, &orthUniforms, &myImageFragShader, &myColorVertexShader);
 
+        orthUniforms[0].ptr = &topImage;
+
+        DrawPrimitive(TRIANGLE, topLeft, verticesTopA, imageAttributesA, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, topLeft, verticesTopB, imageAttributesB, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+
+        /******************************************************************
+	 * 3. Bot left (from SIDE)
+         *****************************************************************/
+        orthUniforms[2].ptr = &sideView;
+        orthUniforms[0].ptr = &frontImage;
+
+        DrawPrimitive(TRIANGLE, botLeft, verticesFrontA, imageAttributesA, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, botLeft, verticesFrontB, imageAttributesB, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+
+        orthUniforms[0].ptr = &sideImage;
+
+        DrawPrimitive(TRIANGLE, botLeft, verticesSideA, imageAttributesA, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, botLeft, verticesSideB, imageAttributesB, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+
+        orthUniforms[0].ptr = &topImage;
+
+        DrawPrimitive(TRIANGLE, botLeft, verticesTopA, imageAttributesA, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, botLeft, verticesTopB, imageAttributesB, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+
+        /******************************************************************
+	 * 4. Bot right (from TOP)
+         *****************************************************************/
+        orthUniforms[2].ptr = &topView;
+        orthUniforms[0].ptr = &frontImage;
+
+        DrawPrimitive(TRIANGLE, botRight, verticesFrontA, imageAttributesA, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, botRight, verticesFrontB, imageAttributesB, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+
+        orthUniforms[0].ptr = &sideImage;
+
+        DrawPrimitive(TRIANGLE, botRight, verticesSideA, imageAttributesA, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, botRight, verticesSideB, imageAttributesB, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+
+        orthUniforms[0].ptr = &topImage;
+
+        DrawPrimitive(TRIANGLE, botRight, verticesTopA, imageAttributesA, &orthUniforms, &myImageFragShader, &myColorVertexShader);
+        DrawPrimitive(TRIANGLE, botRight, verticesTopB, imageAttributesB, &orthUniforms, &myImageFragShader, &myColorVertexShader);
 
         // Blit four panels to target
         int yStartSrc = 0;

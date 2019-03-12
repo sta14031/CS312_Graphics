@@ -2,6 +2,8 @@
 #include "coursefunctions.h"
 #include "shaders.h"
 
+#include "objectLoader.h"
+
 /***********************************************
  * CLEAR_SCREEN
  * Sets the screen to the indicated color value.
@@ -700,6 +702,10 @@ int main()
     GPU_OUTPUT = SDL_CreateTextureFromSurface(REN, FRAME_BUF);
     BufferImage frame(FRAME_BUF);
 
+    // Load object
+    Object obj;
+    obj = ReadFile("utah-teapot.obj");
+
     // Draw loop 
     bool running = true;
     while(running) 
@@ -710,7 +716,7 @@ int main()
         // Refresh Screen
         clearScreen(frame);
 
-        CADView(frame);
+        // Render
 
         // Push to the GPU
         SendFrame(GPU_OUTPUT, REN, FRAME_BUF);

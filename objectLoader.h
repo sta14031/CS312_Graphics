@@ -20,15 +20,15 @@ struct TriDat
 class Object
 {
     public:
-    Object() {}
     std::vector<Vertex> v;
     std::vector<TriDat> t;
 };
 
-Object& ReadFile(char* filename)
+// This must be returned by copy, returning by reference causes dangling pointers in the vectors in obj.
+Object ReadFile(char* filename)
 {
     std::ifstream fin;
-    Object obj;
+    Object obj = Object();
 
     fin.open(filename);
     if (fin.fail())
@@ -38,7 +38,6 @@ Object& ReadFile(char* filename)
     std::string line;
     double d[3];
     while (fin.is_open()) {
-        std::cerr << line << std::endl;
         getline(fin, line);
         if(fin.eof()){
             fin.close();
@@ -46,6 +45,7 @@ Object& ReadFile(char* filename)
         else {
             if (line.empty())
                 break;
+            // Get vertices first
             if (line.at(0) == 'v') {
                 if (line.at(1) == ' '){
                     std::stringstream ss(line);

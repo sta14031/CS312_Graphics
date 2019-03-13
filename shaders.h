@@ -32,6 +32,19 @@ void StaticShader(PIXEL & fragment, const Attributes & vertAttr, const Attribute
         |  ((unsigned int)(rand() * 0xff));
 }
 
+// This makes radioactive blue
+void RadioactiveBlueShader(PIXEL & fragment, const Attributes & vertAttr, const Attributes & uniforms) {
+    fragment = 0xff0000ff;
+}
+
+void GrayAmountAngle(PIXEL & fragment, const Attributes & vertAttr, const Attributes & uniforms) {
+    PIXEL amount = 0x80;
+    fragment = 0xff000000
+    | amount << 16
+    | amount << 8
+    | amount;
+}
+
 /***************************************************
  * Vertex shaders used in week 05 project
  **************************************************/

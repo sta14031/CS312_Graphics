@@ -701,6 +701,7 @@ int main()
     FRAME_BUF = SDL_ConvertSurface(SDL_GetWindowSurface(WIN), SDL_GetWindowSurface(WIN)->format, 0);
     GPU_OUTPUT = SDL_CreateTextureFromSurface(REN, FRAME_BUF);
     BufferImage frame(FRAME_BUF);
+    Buffer2D<double> zBuf(frame.width(), frame.height());
 
     // Load object
     Object obj;
@@ -717,7 +718,7 @@ int main()
         clearScreen(frame);
 
         // Render the loaded object
-        ObjectLoader(frame, obj);
+        ObjectLoader(frame, zBuf, obj);
 
         // Push to the GPU
         SendFrame(GPU_OUTPUT, REN, FRAME_BUF);

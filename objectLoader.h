@@ -100,13 +100,13 @@ Object ReadFile(char* filename)
                         ints[i++] = atoi(word.c_str());
                     }
 
-                    tmpT.i1 = ints[0];
-                    tmpT.i2 = ints[1];
-                    tmpT.i3 = ints[2];
-                    obj.t.push_back(tmpT);
                     tmpT.i1 = ints[2];
-                    tmpT.i2 = ints[3];
+                    tmpT.i2 = ints[1];
                     tmpT.i3 = ints[0];
+                    obj.t.push_back(tmpT);
+                    tmpT.i1 = ints[0];
+                    tmpT.i2 = ints[3];
+                    tmpT.i3 = ints[2];
                     obj.t.push_back(tmpT);
                 }
             }
@@ -116,7 +116,7 @@ Object ReadFile(char* filename)
     return obj;
 }
 
-void ObjectLoader(Buffer2D<PIXEL> & target, Object obj)
+void ObjectLoader(Buffer2D<PIXEL> & target, Buffer2D<double> & zBuf, Object obj)
 {
     Vertex triangle[3];
     Attributes attrs[3];
@@ -133,7 +133,7 @@ void ObjectLoader(Buffer2D<PIXEL> & target, Object obj)
 
     Attributes uniforms;
 
-    Matrix model = translateMatrix(0, 0, 0);
+    Matrix model = scaleMatrix(0.5);
     Matrix view  = viewTransform(myCam.x, myCam.y, myCam.z,
                                     myCam.yaw, myCam.pitch, myCam.roll);
     Matrix proj  = perspectiveTransform(80.0, 1.0, 1, 200); // FOV, Aspect ratio, Near, Far
@@ -152,9 +152,9 @@ void ObjectLoader(Buffer2D<PIXEL> & target, Object obj)
 
     for (it = obj.t.begin(); it != obj.t.end(); it++) {
         // Render every triangle
-        triangle[0] = obj.v[it->i1];
-        triangle[1] = obj.v[it->i2];
-        triangle[2] = obj.v[it->i3];
+        triangle[0] = obj.v[it->i1-1];
+        triangle[1] = obj.v[it->i2-1];
+        triangle[2] = obj.v[it->i3-1];
 
         DrawPrimitive(
             TRIANGLE,
@@ -163,7 +163,8 @@ void ObjectLoader(Buffer2D<PIXEL> & target, Object obj)
             attrs,
             &uniforms,
             &myFragShader,
-            &myVertShader);
+            &myVertShader,
+            &zBuf);
     }
 }
 

@@ -63,7 +63,7 @@ struct Vertex
 struct camControls {
     double x = 0;
     double y = 0;
-    double z = -10;
+    double z = 0;
     double pitch = 0;
     double yaw = 0;
     double roll = 0;
@@ -145,6 +145,18 @@ class Buffer2D
                 for(int c = 0; c < w; c++)
                 {
                     grid[r][c] = 0;
+                }
+            }
+        }
+
+        // Set each member to a value
+        void setAll(const T& val)
+        {
+            for(int r = 0; r < h; r++)
+            {
+                for(int c = 0; c < w; c++)
+                {
+                    grid[r][c] = val;
                 }
             }
         }

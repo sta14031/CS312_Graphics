@@ -716,7 +716,8 @@ int main()
         // Refresh Screen
         clearScreen(frame);
 
-        // Render
+        // Render the loaded object
+        ObjectLoader(frame, obj);
 
         // Push to the GPU
         SendFrame(GPU_OUTPUT, REN, FRAME_BUF);

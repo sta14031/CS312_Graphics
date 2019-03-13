@@ -12,5 +12,7 @@
     - Updated parsing to use std::string instead of char*
     - Murdered some bugs
 
-     : 12:30 - 1:00 [0.5hr]
+     : 12:30 - 1:30 [1.0hr] (commit 3817de2, )
     - Finally fixed a very puzzling scoping problem
+    - Finalizing file parsing logic
+    - Began work on turning object data into visual triangles

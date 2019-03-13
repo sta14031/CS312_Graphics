@@ -3,6 +3,9 @@
 #include <vector>
 #include <stdlib.h>
 #include <cstring>
+#include <string>
+#include <sstream>
+#include <iostream>
 
 #ifndef OBJ_LOADER_H
 #define OBJ_LOADER_H
@@ -17,6 +20,7 @@ struct TriDat
 class Object
 {
     public:
+    Object() {}
     std::vector<Vertex> v;
     std::vector<TriDat> t;
 };
@@ -31,27 +35,36 @@ Object& ReadFile(char* filename)
         return obj;
 
     Vertex tmp;
-    char* line;
-    double d;
+    std::string line;
+    double d[3];
     while (fin.is_open()) {
-        fin.getline(line, 128);
+        std::cerr << line << std::endl;
+        getline(fin, line);
         if(fin.eof()){
             fin.close();
         }
         else {
-
-            //line = strtok(line, " ");
-            if (line == NULL)
+            if (line.empty())
                 break;
-            if (line[0] == 'v') {
-                if (line[1] == ' '){
-                    line = strtok(line, " ");
-                    line = strtok(NULL, " ");
-                    tmp.x = atof(line);
-                    line = strtok(NULL, " ");
-                    tmp.y = atof(line);
-                    line = strtok(NULL, " ");
-                    tmp.z = atof(line);
+            if (line.at(0) == 'v') {
+                if (line.at(1) == ' '){
+                    std::stringstream ss(line);
+                    std::string word;
+                    int i = -1;
+                    while (getline(ss, word, ' '))
+                    {
+                        if (i ==-1) {
+                            i++;
+                            continue;
+                        }
+                        // Get the token
+                        d[i++] = atof(word.c_str());
+                    }
+
+                    tmp.x = d[0];
+                    tmp.y = d[1];
+                    tmp.z = d[2];
+                    tmp.w = 1;
                     obj.v.push_back(tmp);
                 }
             }

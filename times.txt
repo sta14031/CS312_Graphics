@@ -8,7 +8,7 @@
     - Killed some bugs
     - Got killed by some bugs
 
-     : 7:00 - 8:00 [1hr]
+     : 7:00 - 8:00 [1.0hr]
     - Debugged file input stream trying to fix the "puzzling scoping problem" below
 
 3/13 : 10:15 - 11:15 [1.0hr] (commit 2677967)
@@ -20,8 +20,16 @@
     - Finalizing file parsing logic
     - Began work on turning object data into visual triangles
 
-    : 4:45 - 5:30 [0.75hr]
+    : 4:45 - 5:30 [0.75hr] (commit b8676e1)
     - Downloaded some more models to test
     - Corrected an off-by-one error to draw models more correctly
     - Researched lighting and shaders
     - Studied Z-buffers
+
+3/14 : 2:30 - 3:45 [1.25hr]
+    - Got z-buffers in like 10 mintues
+    - More research on lighting
+    - Experimented with lighting and shaders
+    - Added multiple models and animated their motion
+
+Total: 7.5hr

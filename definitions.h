@@ -63,7 +63,7 @@ struct Vertex
 struct camControls {
     double x = 0;
     double y = 0;
-    double z = 0;
+    double z = -50;
     double pitch = 0;
     double yaw = 0;
     double roll = 0;

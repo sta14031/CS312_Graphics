@@ -20,8 +20,9 @@ struct TriDat
 class Object
 {
     public:
-    std::vector<Vertex> v;
-    std::vector<TriDat> t;
+    std::vector<Vertex> v; // vertices
+    std::vector<Vertex> n; // normals
+    std::vector<TriDat> t; // triangles
 };
 
 // This must be returned by copy, returning by reference causes dangling pointers in the vectors in obj.
@@ -73,7 +74,25 @@ Object ReadFile(char* filename)
                     // Texture mapping (we can ignore this)
                 }
                 else if (line.at(1) == 'n') {
-                    // Normals (we can also ignore this)
+                    // Normals
+                    std::stringstream ss(line);
+                    std::string word;
+                    int i = -1;
+                    while (getline(ss, word, ' '))
+                    {
+                        if (i ==-1) {
+                            i++;
+                            continue;
+                        }
+                        // Get the token
+                        d[i++] = atof(word.c_str());
+                    }
+
+                    tmpV.x = d[0];
+                    tmpV.y = d[1];
+                    tmpV.z = d[2];
+                    tmpV.w = 1;
+                    obj.n.push_back(tmpV);
                 }
             }
             else if (line.at(0) == 'f') {
@@ -116,7 +135,7 @@ Object ReadFile(char* filename)
     return obj;
 }
 
-void ObjectLoader(Buffer2D<PIXEL> & target, Buffer2D<double> & zBuf, Object obj)
+void ObjectLoader(Buffer2D<PIXEL> & target, Buffer2D<double> & zBuf, Object obj, Matrix transform)
 {
     Vertex triangle[3];
     Attributes attrs[3];
@@ -133,13 +152,12 @@ void ObjectLoader(Buffer2D<PIXEL> & target, Buffer2D<double> & zBuf, Object obj)
 
     Attributes uniforms;
 
-    Matrix model = scaleMatrix(0.5);
     Matrix view  = viewTransform(myCam.x, myCam.y, myCam.z,
                                     myCam.yaw, myCam.pitch, myCam.roll);
     Matrix proj  = perspectiveTransform(80.0, 1.0, 1, 200); // FOV, Aspect ratio, Near, Far
     
-    uniforms.insertPtr(NULL); // image data (not used at the moment)
-    uniforms.insertPtr(&model);
+    uniforms.insertPtr(NULL); // unused
+    uniforms.insertPtr(&transform);
     uniforms.insertPtr(&view);
     uniforms.insertPtr(&proj);
 

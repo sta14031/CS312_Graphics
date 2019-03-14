@@ -156,7 +156,7 @@ inline double determinant(const double & A, const double & B, const double & C, 
  * Renders a triangle to the target buffer. Essential 
  * building block for most of drawing.
  ************************************************************/
-void DrawTriangle(Buffer2D<PIXEL> & target, Vertex* const triangle, Attributes* const attrs, Attributes* const uniforms, FragmentShader* const frag)
+void DrawTriangle(Buffer2D<PIXEL> & target, Vertex* const triangle, Attributes* const attrs, Attributes* const uniforms, FragmentShader* const frag, Buffer2D<double>* zBuf)
 {
     // Create a bounding box
     int minX = MIN3(triangle[0].x, triangle[1].x, triangle[2].x);
@@ -194,20 +194,25 @@ void DrawTriangle(Buffer2D<PIXEL> & target, Vertex* const triangle, Attributes* 
                 // other attributes) across a depth.
                 double interpZ = 1.0 / interp(areaTriangle, firstDet, secndDet, thirdDet, triangle[0].w, triangle[1].w, triangle[2].w);
 
-                // Interpolate Attributes using constructor provided by Brother Christensen
-                Attributes interpolatedAttribs(
-                    areaTriangle,
-                    firstDet,
-                    secndDet,
-                    thirdDet,
-                    attrs[0],
-                    attrs[1],
-                    attrs[2],
-                    interpZ
-                );
+                // Check interpZ against zBuf
+                if (interpZ < (*zBuf)[y][x]) {
+                    (*zBuf)[y][x] = interpZ;
+                    
+                    // Interpolate Attributes using constructor provided by Brother Christensen
+                    Attributes interpolatedAttribs(
+                        areaTriangle,
+                        firstDet,
+                        secndDet,
+                        thirdDet,
+                        attrs[0],
+                        attrs[1],
+                        attrs[2],
+                        interpZ
+                    );
 
-                // Call shader callback
-                frag->FragShader(target[y][x], interpolatedAttribs, *uniforms);
+                    // Call shader callback
+                    frag->FragShader(target[y][x], interpolatedAttribs, *uniforms);
+                }
             }
         }
     }
@@ -676,7 +681,7 @@ void DrawPrimitive(PRIMITIVES prim,
                 vAttr[1] = clippedAttrs[i - 1];
                 vAttr[2] = clippedAttrs[i];
 
-                DrawTriangle(target, tri, vAttr, uniforms, frag);
+                DrawTriangle(target, tri, vAttr, uniforms, frag, zBuf);
             }
     }
 }
@@ -704,8 +709,11 @@ int main()
     Buffer2D<double> zBuf(frame.width(), frame.height());
 
     // Load object
-    Object obj;
-    obj = ReadFile("utah-teapot.obj");
+    Object teapot1 = ReadFile("utah-teapot.obj");
+    Object teapot2 = teapot1;
+
+    // Animation
+    double aIndex = 0.0;
 
     // Draw loop 
     bool running = true;
@@ -717,8 +725,13 @@ int main()
         // Refresh Screen
         clearScreen(frame);
 
-        // Render the loaded object
-        ObjectLoader(frame, zBuf, obj);
+        // Refresh Z-buffer
+        zBuf.setAll(1000.0); // Use high number here for far away
+
+        // Render the loaded objects
+        ObjectLoader(frame, zBuf, teapot1, translateMatrix(0, 30, 0) * rotateMatrix(Z, -1.0));
+        ObjectLoader(frame, zBuf, teapot2, translateMatrix(20, 0, 0) * scaleMatrix(0.2) * rotateMatrix(Y, aIndex));
+        aIndex += 0.1;
 
         // Push to the GPU
         SendFrame(GPU_OUTPUT, REN, FRAME_BUF);

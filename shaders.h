@@ -40,6 +40,15 @@ void GrayAmountAngle(PIXEL & fragment, const Attributes & vertAttr, const Attrib
     | amount;
 }
 
+// Shades based on the position of the pixel
+void PositionalShader(PIXEL & fragment, const Attributes & vertAttr, const Attributes & uniforms) {
+    fragment = 0xff000000
+        | (((unsigned int)((vertAttr[0].d + 20) / 20 * 0xff)) << 16)
+        | (((unsigned int)((vertAttr[1].d + 20) / 20 * 0xff)) << 8)
+        |  ((unsigned int)((vertAttr[2].d + 20) / 20 * 0xff));
+}
+
+
 /***************************************************
  * Vertex shaders used in week 05 project
  **************************************************/

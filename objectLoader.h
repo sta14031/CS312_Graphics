@@ -138,9 +138,8 @@ Object ReadFile(char* filename)
 void ObjectLoader(Buffer2D<PIXEL> & target, Buffer2D<double> & zBuf, Object obj, Matrix transform)
 {
     Vertex triangle[3];
-    Attributes attrs[3];
 
-    attrs[0].insertDbl(1.0); // r
+    /*attrs[0].insertDbl(1.0); // r
     attrs[0].insertDbl(0.0); // g
     attrs[0].insertDbl(0.0); // b
     attrs[1].insertDbl(0.0); // r
@@ -148,7 +147,7 @@ void ObjectLoader(Buffer2D<PIXEL> & target, Buffer2D<double> & zBuf, Object obj,
     attrs[1].insertDbl(0.0); // b
     attrs[2].insertDbl(0.0); // r
     attrs[2].insertDbl(0.0); // g
-    attrs[2].insertDbl(1.0); // b
+    attrs[2].insertDbl(1.0); // b */
 
     Attributes uniforms;
 
@@ -162,7 +161,7 @@ void ObjectLoader(Buffer2D<PIXEL> & target, Buffer2D<double> & zBuf, Object obj,
     uniforms.insertPtr(&proj);
 
     FragmentShader myFragShader;
-    myFragShader.FragShader = &ColorFragShader;
+    myFragShader.FragShader = &PositionalShader;
     VertexShader myVertShader;
     myVertShader.VertShader = &MVPVertexShader;
 
@@ -173,6 +172,20 @@ void ObjectLoader(Buffer2D<PIXEL> & target, Buffer2D<double> & zBuf, Object obj,
         triangle[0] = obj.v[it->i1-1];
         triangle[1] = obj.v[it->i2-1];
         triangle[2] = obj.v[it->i3-1];
+
+        // Declare attrs here because the attributes are dependent on
+        // which vertex we have (is this cheating?)
+        Attributes attrs[3];
+
+        attrs[0].insertDbl(triangle[0].x);
+        attrs[0].insertDbl(triangle[0].y);
+        attrs[0].insertDbl(triangle[0].z);
+        attrs[1].insertDbl(triangle[1].x);
+        attrs[1].insertDbl(triangle[1].y);
+        attrs[1].insertDbl(triangle[1].z);
+        attrs[2].insertDbl(triangle[2].x);
+        attrs[2].insertDbl(triangle[2].y);
+        attrs[2].insertDbl(triangle[2].z);
 
         DrawPrimitive(
             TRIANGLE,

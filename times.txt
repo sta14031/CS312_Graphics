@@ -1,35 +1,38 @@
-3/11 : 10:30 - 11:15 [0.75hr]
+3/11 : 10:30a - 11:15a [0.75hr]
     - Analyzed .obj filetype
     - Began work on file parser
 
-3/12 : 3:10 - 4:40 [1.5hr] (commit c8e1214)
+3/12 : 3:10p - 4:40p [1.5hr] (commit c8e1214)
     - Continued work on file parsing
     - Ironed out details
     - Killed some bugs
     - Got killed by some bugs
 
-     : 7:00 - 8:00 [1.0hr]
+     : 7:00p - 8:00p [1.0hr]
     - Debugged file input stream trying to fix the "puzzling scoping problem" below
 
-3/13 : 10:15 - 11:15 [1.0hr] (commit 2677967)
+3/13 : 10:15a - 11:15a [1.0hr] (commit 2677967)
     - Updated parsing to use std::string instead of char*
     - Murdered some bugs
 
-     : 12:30 - 1:45 [1.25hr] (commit 3817de2, 6608781)
+     : 12:30p - 1:45p [1.25hr] (commit 3817de2, 6608781)
     - Finally fixed a very puzzling scoping problem
     - Finalizing file parsing logic
     - Began work on turning object data into visual triangles
 
-    : 4:45 - 5:30 [0.75hr] (commit b8676e1)
+     : 4:45p - 5:30p [0.75hr] (commit b8676e1)
     - Downloaded some more models to test
     - Corrected an off-by-one error to draw models more correctly
     - Researched lighting and shaders
     - Studied Z-buffers
 
-3/14 : 2:30 - 3:45 [1.25hr]
+3/14 : 2:30p - 3:45p [1.25hr] (commit cdd7b1c)
     - Got z-buffers in like 10 mintues
     - More research on lighting
     - Experimented with lighting and shaders
     - Added multiple models and animated their motion
 
-Total: 7.5hr
+     : 10:45p - 11:00p [0.25hr]
+    - Implemented a new idea for fragment shading based on position of vertex
+
+Total: 7.75hr

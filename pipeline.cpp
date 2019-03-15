@@ -711,6 +711,8 @@ int main()
     // Load object
     Object teapot1 = ReadFile("utah-teapot.obj");
     Object teapot2 = teapot1;
+    Object cube1 = ReadFile("chamfer-cube.obj");
+    Object cube2 = cube1;
 
     // Animation
     double aIndex = 0.0;
@@ -732,6 +734,9 @@ int main()
         ObjectLoader(frame, zBuf, teapot1, translateMatrix(0, 30, 0) * rotateMatrix(Z, -1.0));
         ObjectLoader(frame, zBuf, teapot2, translateMatrix(20, 0, 0) * scaleMatrix(0.2) * rotateMatrix(Y, aIndex));
         aIndex += 0.1;
+
+        ObjectLoader(frame, zBuf, cube1, translateMatrix(0, 0, 0));
+        ObjectLoader(frame, zBuf, cube2, translateMatrix(-30, 0, -20) * scaleMatrix(2.0) * rotateMatrix(Y, M_PI / 4.0));
 
         // Push to the GPU
         SendFrame(GPU_OUTPUT, REN, FRAME_BUF);

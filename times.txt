@@ -32,7 +32,8 @@
     - Experimented with lighting and shaders
     - Added multiple models and animated their motion
 
-     : 10:45p - 11:00p [0.25hr]
+     : 10:45p - 11:15p [0.5hr] (commit 2da916d)
     - Implemented a new idea for fragment shading based on position of vertex
+    - Added some more models to the scene
 
-Total: 7.75hr
+Total: 8.0hr

@@ -52,6 +52,7 @@ void processUserInputs(bool & running)
         if(e.key.keysym.sym == 'q' && e.type == SDL_KEYDOWN) 
         {
             running = false;
+            exit(0);
         }
 
         // Mouse

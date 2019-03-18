@@ -1,0 +1,56 @@
+0.15 seconds = 1 CC
+
+First run (20.67s)
+
+operator*(Matrix const&, Matrix const&) = 47.33 CC
+Matrix::operator[](int) const = 31.93 CC
+DrawTriangle(Buffer2D<unsigned int>&, Vertex*, Attributes*, Attributes*, FragmentShader*, Buffer2D<double>*) = 12.00 CC
+clipVertices(Vertex const*, Attributes const*, int const&, Vertex*, Attributes*, int&) = 10.13
+Attributes::Attributes(double const&, double const&, double const&, double const&, Attributes const&, Attributes const&, Attributes const&, double) = 5.40 CC
+determinant(double const&, double const&, double const&, double const&) = 4.26 CC
+
+Second run (30.04s)
+
+DrawTriangle(Buffer2D<unsigned int>&, Vertex*, Attributes*, Attributes*, FragmentShader*, Buffer2D<double>*) = 69.27 CC
+clipVertices(Vertex const*, Attributes const*, int const&, Vertex*, Attributes*, int&) = 59.27 CC
+MVPVertexShader(Vertex&, Attributes&, Vertex const&, Attributes const&, Attributes const&) = 44.13 CC
+PositionalShader(unsigned int&, Attributes const&, Attributes const&) = 9.13 CC
+DrawPrimitive(PRIMITIVES, Buffer2D<unsigned int>&, Vertex const*, Attributes const*, Attributes*, FragmentShader*, VertexShader*, Buffer2D<double>*) [clone .constprop.108] = 4.40 CC
+
+Third run (16.74s)
+- Optimized matrix indexing
+
+operator*(Matrix const&, Matrix const&) = 43.33 CC
+Matrix::operator[](int) const = 16.73 CC
+DrawTriangle(Buffer2D<unsigned int>&, Vertex*, Attributes*, Attributes*, FragmentShader*, Buffer2D<double>*) = 10.20 CC
+clipVertices(Vertex const*, Attributes const*, int const&, Vertex*, Attributes*, int&) = 8.07 CC
+Attributes::Attributes(double const&, double const&, double const&, double const&, Attributes const&, Attributes const&, Attributes const&, double) = 6.13 CC
+determinant(double const&, double const&, double const&, double const&) = 5.47 CC
+PositionalShader(unsigned int&, Attributes const&, Attributes const&) = 3.27 CC
+
+Fourth run(20.58s)
+- Optimized matrix multiply
+
+operator*(Matrix const&, Matrix const&) = 64.20 CC
+Matrix::operator[](int) const = 20.13 CC
+DrawTriangle(Buffer2D<unsigned int>&, Vertex*, Attributes*, Attributes*, FragmentShader*, Buffer2D<double>*) = 11.20 CC
+clipVertices(Vertex const*, Attributes const*, int const&, Vertex*, Attributes*, int&) = 9.73 CC
+Attributes::Attributes(double const&, double const&, double const&, double const&, Attributes const&, Attributes const&, Attributes const&, double) = 6.00 CC
+determinant(double const&, double const&, double const&, double const&) = 4.73 CC
+PositionalShader(unsigned int&, Attributes const&, Attributes const&) = 3.13 CC
+
+Final pass (27.46s)
+
+MVPVertexShader(Vertex&, Attributes&, Vertex const&, Attributes const&, Attributes const&) = 71.60 CC
+DrawTriangle(Buffer2D<unsigned int>&, Vertex*, Attributes*, Attributes*, FragmentShader*, Buffer2D<double>*) = 47.87 CC
+clipVertices(Vertex const*, Attributes const*, int const&, Vertex*, Attributes*, int&) = 42.20 CC
+PositionalShader(unsigned int&, Attributes const&, Attributes const&) = 5.47 CC
+DrawPrimitive(PRIMITIVES, Buffer2D<unsigned int>&, Vertex const*, Attributes const*, Attributes*, FragmentShader*, VertexShader*, Buffer2D<double>*) [clone .constprop.108] = 4.80 CC
+
+Table
+
+Function                                    Before optimization     Algorithmic optimization    Final optimization
+operator*(Matrix const&, Matrix const&)     47.33                   43.33                       0.07 
+Matrix::operator[](int) const               31.93                   16.73                       //
+DrawTriangle(...)                           12.00                   10.20                       47.87
+clipVertices(...)                           10.13                   8.07                        42.20

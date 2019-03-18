@@ -36,4 +36,11 @@
     - Implemented a new idea for fragment shading based on position of vertex
     - Added some more models to the scene
 
-Total: 8.0hr
+3/15 : 10:15a - 11:15a [1.0hr]
+    - Looked at optimization project and experimented
+    * Reverted to last commit
+
+3/18 : 10:15a - 11:15a [1.0hr]
+    - Did optimization team activity
+
+Total: 10.0hr

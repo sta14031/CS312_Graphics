@@ -11,26 +11,41 @@ class Matrix {
     Matrix() { clear(); }               // initialize with identity matrix
     Matrix(double* values);             // initialize with 16 values
 
-    double v[4][4];
+    double v[16];
 
     void clear(); // set back to default state (identity matrix)
 
-    const double& operator[](const int i) const { return v[i/4][i%4]; } // array access
-    double& operator[](const int i) { return v[i/4][i%4]; }             // non-const array access
+    const double& operator[](const int i) const { return v[i]; } // array access
+    double& operator[](const int i) { return v[i]; }             // non-const array access
 };
 
 // Constructor that takes an array of 16 values for the matrix
 Matrix::Matrix(double* values) {
-    for (int r = 0; r < 4; r++)
-    for (int c = 0; c < 4; c++)
-        this->v[r][c] = values[r*4 + c];
+    for (int i = 0; i < 16; i++)
+        this->v[i] = values[i];
 }
 
 // Sets the values of the matrix to the identity matrix
 void Matrix::clear() {
-    for (int r = 0; r < 4; r++)
-    for (int c = 0; c < 4; c++)
-        this->v[r][c] = (r == c ? 1 : 0);
+    this->v[0] = 1;
+    this->v[1] = 0;
+    this->v[2] = 0;
+    this->v[3] = 0;
+
+    this->v[4] = 0;
+    this->v[5] = 1;
+    this->v[6] = 0;
+    this->v[7] = 0;
+    
+    this->v[8]  = 0;
+    this->v[9]  = 0;
+    this->v[10] = 1;
+    this->v[11] = 0;
+
+    this->v[12] = 0;
+    this->v[13] = 0;
+    this->v[14] = 0;
+    this->v[15] = 1;
 }
 
 // Multiplication of 4x4 by 4x1 matrix
@@ -65,8 +80,62 @@ Matrix operator* (const Matrix& lhs, const Matrix& rhs) {
     
     // Loop over every cell in result
     for (int i = 0; i < 16; i++) {
-        int r = 4 * (i / 4);
-        int c = i % 4;
+        int r;
+        //int r = 4 * (i / 4);
+        switch(i) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            r = 0;
+            break;
+            
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            r = 4;
+            break;
+
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            r = 8;
+            break;
+
+            default:
+            r = 12;
+        }
+        
+        int c;
+        //int c = i % 4;
+        switch(i) {
+            case 0:
+            case 4:
+            case 8:
+            case 12:
+            c = 0;
+            break;
+
+            case 1:
+            case 5:
+            case 9:
+            case 13:
+            c = 1;
+            break;
+
+            case 2:
+            case 6:
+            case 10:
+            case 14:
+            c = 2;
+            break;
+
+            default:
+            c = 3;
+        }
+        
         double sum = 0;
 
         // Loop 4 times (row is 4 long, col is 4 long)

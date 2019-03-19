@@ -79,6 +79,7 @@ Matrix operator* (const Matrix& lhs, const Matrix& rhs) {
     Matrix result;
     
     // Loop over every cell in result
+    // Using jump tables (switch statements) instead of math operations
     for (int i = 0; i < 16; i++) {
         int r;
         //int r = 4 * (i / 4);

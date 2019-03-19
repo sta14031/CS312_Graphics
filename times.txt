@@ -1,3 +1,9 @@
+Object Loader project -
+Tyler Starr
+Wyatt Larson
+George Wieland
+Nathan Prestwich
+
 3/11 : 10:30a - 11:15a [0.75hr]
     - Analyzed .obj filetype
     - Began work on file parser
@@ -23,6 +29,7 @@
      : 4:45p - 5:30p [0.75hr] (commit b8676e1)
     - Downloaded some more models to test
     - Corrected an off-by-one error to draw models more correctly
+      (obj files index starting from 1, not 0)
     - Researched lighting and shaders
     - Studied Z-buffers
 
@@ -41,6 +48,12 @@
     * Reverted to last commit
 
 3/18 : 10:15a - 11:15a [1.0hr]
-    - Did optimization team activity
+    - Did optimization team activity (c20a08d)
 
-Total: 10.0hr
+     : 4:00p - 6:30p [2.5hr]
+    -added the optimization flags to the tasks.json file
+    -downloaded video recording software
+    -made a video to present the project
+    -worked on git issues
+
+Total: 12.5hr

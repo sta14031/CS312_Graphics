@@ -56,7 +56,7 @@ float threshold = 1.0;
  * < END OF GLOBALS >
  *********************************************************/
 #define CAM_INCREMENT 0.05
-#define STEP_INCREMENT 0.035
+#define STEP_INCREMENT 0.5
 
 // Update state based on keyboard
 bool processUserInputs(bool & running)
